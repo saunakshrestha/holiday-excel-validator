@@ -1,6 +1,10 @@
 # Virtual Environment
 venv/
 
+#migrations
+migrations/
+
+
 # Python
 __pycache__/
 *.py[cod]
@@ -30,3 +34,12 @@ build/
 *.xls
 uploads/
 .DS_Store
+
+
+
+# Flask specific files
+instance/
+*.db
+*.sqlite3
+*.pyo
+*.pyd
