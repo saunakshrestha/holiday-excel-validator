@@ -1,0 +1,140 @@
+@import '../variables';
+
+.holiday-list {
+  background: rgba(255, 255, 255, 0.98);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba($navy, $opacity-light);
+  border-radius: 16px;
+  box-shadow: $shadow-md;
+  padding: 1.5rem;
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba($navy, $opacity-light);
+
+    h3 {
+      color: $navy;
+      margin: 0;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+
+    .file-upload__label {
+      background: $navy;
+      color: $white;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+      font-weight: 500;
+      box-shadow: $shadow-md;
+
+      &:hover {
+        transform: translateY(-2px);
+        background: $navy-dark;
+        box-shadow: $shadow-lg;
+      }
+    }
+  }
+
+  &__status {
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+
+    &--loading {
+      background: rgba(#001F3F, 0.1);
+      color: #001F3F;
+      border: 1px solid rgba(#001F3F, 0.2);
+    }
+
+    &--success {
+      background: rgba($success-color, 0.1);
+      color: darken($success-color, 30%);
+      border: 1px solid rgba($success-color, 0.2);
+    }
+
+    &--error {
+      background: rgba($error-color, 0.1);
+      color: darken($error-color, 30%);
+      border: 1px solid rgba($error-color, 0.2);
+    }
+  }
+
+  &__loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    color: #001F3F;
+    gap: 1rem;
+  }
+
+  &__content {
+    .holidays-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+
+      .holiday-item {
+        display: flex;
+        justify-content: space-between;
+        padding: 1rem;
+        border-bottom: 1px solid rgba(0, 31, 63, 0.1);
+        transition: all 0.3s ease;
+        border-radius: 8px;
+
+        &:hover {
+          background: rgba(0, 31, 63, 0.05);
+          transform: translateY(-2px);
+          box-shadow: 0 4px 15px rgba(0, 31, 63, 0.05);
+        }
+
+        .holiday-date {
+          color: #001F3F;
+          font-weight: 500;
+        }
+
+        .holiday-description {
+          color: rgba(0, 31, 63, 0.8);
+        }
+      }
+    }
+  }
+
+  &__empty {
+    text-align: center;
+    padding: 2rem;
+    color: rgba(0, 31, 63, 0.8);
+    background: rgba(0, 31, 63, 0.05);
+    border-radius: 12px;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(0, 31, 63, 0.1);
+  }
+
+  .retry-button {
+    background: $navy;
+    color: $white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    margin-top: 0.5rem;
+    transition: all 0.3s ease;
+    font-weight: 500;
+    box-shadow: $shadow-md;
+
+    &:hover {
+      background: #002b57;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 8px rgba(0, 31, 63, 0.15);
+    }
+  }
+}

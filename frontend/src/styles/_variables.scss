@@ -1,0 +1,33 @@
+// Color Palette
+$primary-blue: #1e88e5;
+$light-blue: #64b5f6;
+$lighter-blue: #bbdefb;
+$dark-blue: #1565c0;
+$navy: #001F3F;
+$navy-dark: #002b57;
+$white: #ffffff;
+$off-white: #f5f8fa;
+$gray-100: #f8f9fa;
+$gray-200: #e9ecef;
+$gray-300: #dee2e6;
+
+// Component Colors
+$background-color: $white;
+$primary-text: #2c3e50;
+$secondary-text: #546e7a;
+$border-color: $gray-300;
+$hover-color: $lighter-blue;
+$active-color: $primary-blue;
+$loading-color: $light-blue;
+$error-color: #e57373;
+$success-color: #81c784;
+
+// Opacity Values
+$opacity-light: 0.1;
+$opacity-medium: 0.15;
+$opacity-high: 0.8;
+
+// Box Shadow
+$shadow-sm: 0 4px 6px rgba($navy, 0.1);
+$shadow-md: 0 8px 32px rgba($navy, 0.08);
+$shadow-lg: 0 12px 36px rgba($navy, 0.15);
