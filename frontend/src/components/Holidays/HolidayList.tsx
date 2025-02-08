@@ -2,50 +2,63 @@ import { useState, useEffect } from 'react';
 import FileUpload from '../common/FileUpload';
 import { Holiday } from '../../types/types';
 import { uploadHolidays, validateHolidayExcel, fetchHolidays } from '../../services/api';
+import axios from 'axios';
 
 interface HolidayListProps {
   onUpdateComplete?: () => void;
+  initialHolidays?: string[];
+}
+
+interface ValidationResult {
+  isValid: boolean;
+  message: string;
+  errors?: string[];
 }
 
 const HolidayList: React.FC<HolidayListProps> = ({ onUpdateComplete }) => {
-  const [holidays, setHolidays] = useState<Holiday[]>([]);
-  const [saturdays, setSaturdays] = useState<Holiday[]>([]);
+  const [holidays, setHolidays] = useState<string[]>([]);
+  const [saturdays, setSaturdays] = useState<string[]>([]);
   const [isUploading, setIsUploading] = useState(false);
   const [isValidating, setIsValidating] = useState(false);
-  // Add this interface at the top of the file
-  interface ValidationResult {
-    isValid: boolean;
-    message: string;
-    errors?: string[];
-  }
-  
-  // Update the state definition
   const [validationData, setValidationData] = useState<ValidationResult | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
   useEffect(() => {
+    console.log('Initializing holiday list...');
     fetchHolidayData();
     fetchSaturdayData();
   }, []);
 
   const fetchHolidayData = async () => {
     try {
-      const data = await fetchHolidays();
-      setHolidays(data);
-    } catch (error: unknown) {
-      const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
-      console.error('Error fetching holidays:', errorMessage);
+      const response = await fetchHolidays();
+      console.log('Holiday data received:', response);
+      if (response?.holidays && Array.isArray(response.holidays)) {
+        setHolidays(response.holidays);
+      } else {
+        console.error('Invalid holiday data format:', response);
+        setHolidays([]);
+      }
+    } catch (error) {
+      console.error('Error fetching holidays:', error);
+      setHolidays([]);
     }
   };
 
   const fetchSaturdayData = async () => {
     try {
-      const response = await api.get('/api/saturdays');
-      setSaturdays(response.data);
-    } catch (error: unknown) {
-      const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
-      console.error('Error fetching saturdays:', errorMessage);
+      const response = await axios.get('/api/saturdays');
+      console.log('Saturday data received:', response.data);
+      if (response.data?.success && Array.isArray(response.data.saturdays)) {
+        setSaturdays(response.data.saturdays);
+      } else {
+        console.error('Invalid saturday data format:', response.data);
+        setSaturdays([]);
+      }
+    } catch (error) {
+      console.error('Error fetching saturdays:', error);
+      setSaturdays([]);
     }
   };
 
@@ -82,83 +95,68 @@ const HolidayList: React.FC<HolidayListProps> = ({ onUpdateComplete }) => {
 
   return (
     <div className="holiday-container">
-      <div className="data-display">
-        <div className="validation-section">
-          <div className="validation-box">
-            <h3>Validate Excel</h3>
+      <div className="upload-section">
+        <div className="upload-box">
+          <h3>Upload Holidays/Saturdays</h3>
+          <div className="holiday-upload">
             <FileUpload
-              onFileSelect={handleFileValidation}
-              label="Validate Excel File"
+              onFileSelect={handleFileUpload}
+              label="Upload Excel File"
               accept=".xlsx,.xls"
-              disabled={isValidating}
+              disabled={isUploading}
             />
-            {isValidating && (
-              <div className="validation-status">
+            {isUploading && (
+              <div className="upload-status">
                 <div className="loading-spinner" />
-                <span>Validating...</span>
+                <span>Uploading...</span>
               </div>
             )}
-            {validationData && (
-              <div className="validation-results">
-                <h4>Validation Results</h4>
-                <div className="results-content">
-                  {Array.isArray(validationData) && validationData.map((item, index) => (
-                    <div key={index} className="validation-item">
-                      {JSON.stringify(item)}
-                    </div>
-                  ))}
-                </div>
-              </div>
+            {successMessage && (
+              <div className="success-message">{successMessage}</div>
+            )}
+            {error && (
+              <div className="error-message">{error}</div>
             )}
           </div>
         </div>
+      </div>
 
+      <div className="data-display">
         <div className="data-box holidays-box">
           <h3>Holidays</h3>
           <div className="data-content">
-            {holidays.map((holiday, index) => (
-              <div key={index} className="data-item">
-                <span className="date">{holiday.date}</span>
-                <span className="description">{holiday.description}</span>
-              </div>
-            ))}
+            {Array.isArray(holidays) && holidays.length > 0 ? (
+              holidays.map((holiday, index) => (
+                <div key={index} className="data-item">
+                  <span className="date">{holiday}</span>
+                </div>
+              ))
+            ) : (
+              <p>No holidays available</p>
+            )}
           </div>
         </div>
         
         <div className="data-box saturdays-box">
           <h3>Saturdays</h3>
-          <div className="data-content">
-            {saturdays.map((saturday, index) => (
-              <div key={index} className="data-item">
-                <span className="date">{saturday.date}</span>
-                <span className="description">{saturday.description}</span>
+          <div className="data-content" style={{
+            maxHeight: '200px',
+            overflowY: 'auto',
+            padding: '8px',
+            margin: '4px',
+            fontSize: '14px',
+            lineHeight: '1.4',
+            backgroundColor: '#f5f5f5',
+            borderRadius: '4px'
+          }}>
+            {Array.isArray(saturdays) && saturdays.length > 0 ? (
+              <div style={{ wordBreak: 'break-word', whiteSpace: 'pre-wrap' }}>
+                {saturdays.join(', ')}
               </div>
-            ))}
+            ) : (
+              <p>No saturdays available</p>
+            )}
           </div>
-        </div>
-      </div>
-
-      <div className="upload-section">
-        <div className="upload-box">
-          <h3>Upload Data</h3>
-          <FileUpload
-            onFileSelect={handleFileUpload}
-            label="Upload Excel File"
-            accept=".xlsx,.xls"
-            disabled={isUploading}
-          />
-          {isUploading && (
-            <div className="upload-status">
-              <div className="loading-spinner" />
-              <span>Uploading...</span>
-            </div>
-          )}
-          {successMessage && (
-            <div className="success-message">{successMessage}</div>
-          )}
-          {error && (
-            <div className="error-message">{error}</div>
-          )}
         </div>
       </div>
     </div>

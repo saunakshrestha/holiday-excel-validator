@@ -1,150 +1,60 @@
 .holiday-container {
   display: flex;
   flex-direction: column;
-  gap: 2rem;
-  padding: 2rem;
+  gap: 1rem;
+  padding: 1rem;
   height: 100%;
 
-  .data-display {
-    display: flex;
-    gap: 2rem;
-    flex: 1;
-
-    .data-box {
-      flex: 1;
-      background: #fff;
-      border-radius: 8px;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-      padding: 1.5rem;
-
-      h3 {
-        margin: 0 0 1rem;
-        color: #333;
-        font-size: 1.25rem;
-      }
-
-      .data-content {
-        height: calc(100% - 3rem);
-        overflow-y: auto;
-
-        .data-item {
-          display: flex;
-          gap: 1rem;
-          padding: 0.75rem;
-          border-bottom: 1px solid #eee;
-
-          &:last-child {
-            border-bottom: none;
-          }
-
-          .date {
-            min-width: 100px;
-            font-weight: 500;
-          }
-
-          .description {
-            color: #666;
-          }
-        }
-      }
-    }
-  }
-
-  .validation-section {
-    flex: 1;
-    margin-bottom: 2rem;
-
-    .validation-box {
-      background: #fff;
-      border-radius: 8px;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-      padding: 1.5rem;
-
-      h3 {
-        margin: 0 0 1rem;
-        color: #333;
-        font-size: 1.25rem;
-      }
-
-      .validation-results {
-        margin-top: 1rem;
-        
-        h4 {
-          margin: 0 0 0.5rem;
-          color: #666;
-        }
-
-        .results-content {
-          max-height: 300px;
-          overflow-y: auto;
-          border: 1px solid #eee;
-          border-radius: 4px;
-          padding: 0.5rem;
-
-          .validation-item {
-            padding: 0.5rem;
-            border-bottom: 1px solid #eee;
-            
-            &:last-child {
-              border-bottom: none;
-            }
-          }
-        }
-      }
-    }
-  }
-
   .upload-section {
-    position: fixed;
-    bottom: 2rem;
-    left: 2rem;
-    max-width: 400px;
-    z-index: 10;
+    flex: 0 0 auto;
+    margin-bottom: 1rem;
     
     .upload-box {
       background: #fff;
       border-radius: 8px;
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-      padding: 1.5rem;
-      max-width: 400px;
+      padding: 1rem;
 
       h3 {
-        margin: 0 0 1rem;
+        margin: 0 0 0.75rem;
         color: #333;
-        font-size: 1.25rem;
+        font-size: 1.1rem;
       }
 
-      .upload-status {
+      .holiday-upload {
         display: flex;
-        align-items: center;
+        flex-direction: column;
         gap: 0.5rem;
-        margin-top: 1rem;
-        color: #666;
-
-        .loading-spinner {
-          width: 20px;
-          height: 20px;
-          border: 2px solid #f3f3f3;
-          border-top: 2px solid #3498db;
-          border-radius: 50%;
-          animation: spin 1s linear infinite;
-        }
-      }
-
-      .success-message {
-        margin-top: 1rem;
-        color: #2ecc71;
-      }
-
-      .error-message {
-        margin-top: 1rem;
-        color: #e74c3c;
       }
     }
   }
 
-  @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+  .data-display {
+    flex: 1;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    min-height: 0;
+
+    .data-box {
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+
+      h3 {
+        margin: 0 0 0.75rem;
+        color: #333;
+        font-size: 1.1rem;
+      }
+
+      .data-content {
+        flex: 1;
+        overflow-y: auto;
+        min-height: 0;
+      }
+    }
   }
 }
