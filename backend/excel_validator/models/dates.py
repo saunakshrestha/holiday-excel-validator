@@ -6,12 +6,13 @@ class Holiday(db.Model):
     
     id = db.Column(db.Integer, primary_key=True)
     date = db.Column(db.Date, nullable=False, index=True)  # Date column for storing normalized dates
-    day_type = db.Column(db.String(50), nullable=False)    # Field to determine if it's 'Saturday', 'Public Holiday', etc.
+    day_type = db.Column(db.String(50), nullable=False)    # Field to determine if it's 'Saturday', 'Holiday', etc.
     description = db.Column(db.String(255), nullable=True)  # Optionally store a description for the day (e.g., holiday name)
     
     __table_args__ = (
         db.Index('idx_holiday_date', 'date'),  # Index for fast date-based queries
         db.Index('idx_holiday_type', 'day_type'),  # Index for fast type-based queries
+        db.UniqueConstraint('date', 'day_type', name='uq_holiday_date_type')
     )
     
     def __init__(self, date_str, day_type, description=None):
