@@ -5,6 +5,8 @@ export interface Holiday {
 }
 
 export interface FileUploadResponse {
-  dates: string[];
+  success: boolean;
   message: string;
+  holiday_dates?: string[];
+  invalid_dates?: string[];
 }

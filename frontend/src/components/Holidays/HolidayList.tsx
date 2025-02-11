@@ -34,8 +34,10 @@ const HolidayList: React.FC<HolidayListProps> = ({ onUpdateComplete }) => {
     try {
       const response = await fetchHolidays();
       console.log('Holiday data received:', response);
-      if (response?.holidays && Array.isArray(response.holidays)) {
-        setHolidays(response.holidays);
+      if (Array.isArray(response)) {
+        // Convert Holiday objects to strings (assuming each Holiday has a date property)
+        const holidayStrings = response.map((holiday: Holiday) => holiday.date);
+        setHolidays(holidayStrings);
       } else {
         console.error('Invalid holiday data format:', response);
         setHolidays([]);
@@ -77,6 +79,12 @@ const HolidayList: React.FC<HolidayListProps> = ({ onUpdateComplete }) => {
   };
 
   const handleFileUpload = async (file: File) => {
+    const confirmUpload = window.confirm(
+      'Are you sure you want to upload this file? This action will update the holiday database.'
+    );
+
+    if (!confirmUpload) return;
+
     setIsUploading(true);
     setError(null);
     setSuccessMessage(null);
@@ -96,14 +104,15 @@ const HolidayList: React.FC<HolidayListProps> = ({ onUpdateComplete }) => {
   return (
     <div className="holiday-container">
       <div className="upload-section">
-        <div className="upload-box">
-          <h3>Upload Holidays/Saturdays</h3>
+        <div className="upload-box admin-upload">
+          <h3>Admin Upload</h3>
           <div className="holiday-upload">
             <FileUpload
               onFileSelect={handleFileUpload}
-              label="Upload Excel File"
+              label="Upload Holidays/Saturdays"
               accept=".xlsx,.xls"
               disabled={isUploading}
+              className="admin-upload-button"
             />
             {isUploading && (
               <div className="upload-status">

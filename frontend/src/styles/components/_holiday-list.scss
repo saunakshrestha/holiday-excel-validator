@@ -24,20 +24,21 @@
       letter-spacing: 0.5px;
     }
 
-    .file-upload__label {
-      background: $navy;
-      color: $white;
-      border: none;
-      padding: 0.75rem 1.5rem;
-      border-radius: 8px;
-      transition: all 0.3s ease;
-      font-weight: 500;
-      box-shadow: $shadow-md;
-
-      &:hover {
-        transform: translateY(-2px);
-        background: $navy-dark;
-        box-shadow: $shadow-lg;
+    .admin-upload {
+      .admin-upload-button {
+        .file-upload__label {
+          background: #dc3545;
+          font-size: 0.9rem;
+          padding: 0.5rem 1rem;
+  
+          &:hover {
+            background: darken(#dc3545, 10%);
+          }
+        }
+      }
+  
+      .upload-status {
+        font-size: 0.9rem;
       }
     }
   }

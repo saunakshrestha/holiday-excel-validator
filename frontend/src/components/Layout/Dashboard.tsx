@@ -2,7 +2,8 @@ import ExcelValidator from '../Validator/ExcelValidator';
 import HolidayList from '../Holidays/HolidayList';
 import { useEffect, useState, useCallback } from 'react';
 import axios from 'axios';
-import { fetchHolidays, api } from '../../services/api';
+import { fetchHolidays } from '../../services/api';
+import api from '../../services/api';
 
 interface HolidayResponse {
   holidays: string[];
@@ -29,12 +30,18 @@ const Dashboard = () => {
       const response = await fetchHolidays();
       console.log('Holidays response:', response);
       
-      if (response?.success && Array.isArray(response.holidays)) {
-        setHolidayData(response);
+      if (response && typeof response === 'object' && 'holidays' in response && 
+          'message' in response && 'success' in response &&
+          Array.isArray(response.holidays)) {
+        setHolidayData({
+          holidays: response.holidays,
+          message: response.message as string,
+          success: response.success as boolean
+        });
         console.log('Holidays data set:', response);
       } else {
         console.error('Invalid response format:', response);
-        setError(response?.message || 'Failed to fetch holidays');
+        setError('Failed to fetch holidays');
       }
     } catch (err) {
       console.error('Error in loadHolidays:', err);

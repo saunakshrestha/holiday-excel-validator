@@ -2,6 +2,7 @@ import { useState } from 'react';
 import FileUpload from '../common/FileUpload';
 import { FileUploadResponse } from '../../types/types';
 import { validateExcel } from '../../services/api';
+import '../../styles/components/_excel-validator.scss';
 
 const ExcelValidator = () => {
   const [validationResponse, setValidationResponse] = useState<FileUploadResponse | null>(null);
@@ -21,25 +22,35 @@ const ExcelValidator = () => {
 
   return (
     <div className="excel-validator">
-      <FileUpload
-        onFileSelect={handleFileUpload}
-        label="Upload Excel for Validation"
-        accept=".xlsx,.xls"
-      />
-      {isValidating && <div className="loading">Validating...</div>}
-      {validationResponse && (
-        <div className="validation-results">
-          <h3>Validation Results:</h3>
-          <ul>
-            {validationResponse.dates.map((date, index) => (
-              <li key={index}>{date}</li>
-            ))}
-          </ul>
-          {validationResponse.message && (
-            <p className="validation-message">{validationResponse.message}</p>
-          )}
-        </div>
-      )}
+      <div className="validator-content">
+        <FileUpload
+          onFileSelect={handleFileUpload}
+          label="Upload Excel for Validation"
+          accept=".xlsx,.xls"
+          className="validator-upload"
+        />
+        {isValidating && <div className="loading">Validating...</div>}
+        {validationResponse && (
+          <div className="validation-results">
+            <h4>Validation Results:</h4>
+            {validationResponse.holiday_dates && validationResponse.holiday_dates.length > 0 && (
+              <div className="holiday-dates">
+                <p>Found holidays on:</p>
+                <ul>
+                  {validationResponse.holiday_dates.map((date: string, index: number) => (
+                    <li key={index}>{date}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+            {validationResponse.message && (
+              <p className={`validation-message ${validationResponse.success ? 'success' : 'warning'}`}>
+                {validationResponse.message}
+              </p>
+            )}
+          </div>
+        )}
+      </div>
     </div>
   );
 };

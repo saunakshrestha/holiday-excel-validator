@@ -4,7 +4,8 @@ interface FileUploadProps {
   onFileSelect: (file: File) => void;
   accept?: string;
   label: string;
-  disabled?: boolean; // Add this line
+  disabled?: boolean;
+  className?: string; // Add className prop
 }
 
 const FileUpload: React.FC<FileUploadProps> = ({ onFileSelect, accept = '*', label, disabled = false }) => { // Modify this line
