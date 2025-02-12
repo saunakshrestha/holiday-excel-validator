@@ -8,6 +8,8 @@ from config import Config
 db = SQLAlchemy()
 migrate = Migrate()
 
+from excel_validator.cli import remove_duplicate_dates
+
 def create_app(config_class=Config):
     app = Flask(__name__)
     app.config.from_object(config_class)
@@ -39,5 +41,8 @@ def create_app(config_class=Config):
     def internal_error(error):
         db.session.rollback()
         return jsonify({'error': 'Internal Server Error'}), 500
+
+    # Register CLI command
+    app.cli.add_command(remove_duplicate_dates)
 
     return app

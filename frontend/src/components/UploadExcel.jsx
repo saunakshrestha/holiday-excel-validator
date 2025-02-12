@@ -23,15 +23,28 @@ const UploadExcel = () => {
       setFile(null) // Reset file input after upload
       setType('') // Reset type selection
     } catch (error) {
-      console.error('❌ Error uploading file', error)
-      alert('❌ Upload failed. Please try again.')
+      console.error('❌ Error uploading file:', error)
+
+      // Handle different error scenarios
+      const errorMessage =
+        error.response?.data?.error ||
+        error.response?.data?.message ||
+        'Upload failed. Please try again.'
+
+      if (error.response?.status === 409) {
+        alert('⚠️ Some dates already exist in the database')
+      } else if (error.response?.status === 400) {
+        alert(`❌ Error: ${errorMessage}`)
+      } else {
+        alert(`❌ ${errorMessage}`)
+      }
     }
   }
 
   return (
     <div className='p-4 bg-white rounded-lg shadow'>
       <h2 className='text-lg font-semibold mb-2'>
-        🔴 ⚠️ Only New Holidays (xlsx)
+        🔴 ⚠️ Only New Holidays (Excel should have 'Dates' column)
       </h2>
 
       {/* Type selection dropdown */}

@@ -7,6 +7,7 @@ import pandas as pd
 from datetime import datetime
 from flask import request, jsonify
 from werkzeug.utils import secure_filename
+from sqlalchemy import exc as sqlalchemy_exc
 
 # CORS Configuration
 cors = CORS(bp, resources={
@@ -43,7 +44,7 @@ def list_saturdays():
     response_data = {
         "success": True,
         "message": "Saturdays fetched successfully",
-        "data": saturdays_list
+        "saturdays": saturdays_list
     }
     return jsonify(response_data), 200
 
@@ -58,7 +59,7 @@ def allowed_file(filename):
 @bp.route('/upload/excel/holidays', methods=['POST'])
 def upload_holidays():
     holiday_type = request.form.get('type', '')
-    if holiday_type not in ['holiday','saturday']:
+    if holiday_type.lower() not in ['holiday','saturday']:
         return jsonify({"error": "Invalid type parameter. Expected 'holidays'."}), 400
     
     if 'file' not in request.files:
@@ -85,10 +86,8 @@ def upload_holidays():
         valid_dates = []
 
         # Process each row in the 'Dates' column
-        print(df)
         for index, row in df.iterrows():
             date_str = str(row['Dates']).strip()
-            print(date_str)
             try:
                 # Validate and parse the date using the Holiday model
                 holiday = Holiday(
@@ -96,14 +95,23 @@ def upload_holidays():
                     day_type="Holiday" if holiday_type == 'holiday' else "Saturday",
                     description="Custom Holiday"
                 )
-                print(holiday)
+                
                 valid_dates.append(holiday)
             except ValueError:
+                print(f"Invalid date format: {date_str}")
                 invalid_dates.append(date_str)
 
         # Store valid holidays in the database
-        db.session.bulk_save_objects(valid_dates)
-        db.session.commit()
+        try:
+            db.session.bulk_save_objects(valid_dates)
+            db.session.commit()
+        except sqlalchemy_exc.IntegrityError:
+            db.session.rollback()
+            return jsonify({
+                "success": False,
+                "message": "Some dates already exist in the database",
+                "invalid_dates": invalid_dates
+            }), 409  # HTTP 409 Conflict
 
         # Return a response
         if invalid_dates:
@@ -114,7 +122,14 @@ def upload_holidays():
         else:
             return jsonify({"message": "All holidays were uploaded successfully!"}), 200
 
+
+    except pd.errors.EmptyDataError:
+        return jsonify({
+            "success": False,
+            "message": "The uploaded file is empty"
+        }), 400
     except Exception as e:
+        print(f"Error: {str(e)}")
         return jsonify({"error": f"An error occurred: {str(e)}"}), 500
 
 
