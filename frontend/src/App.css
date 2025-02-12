@@ -1,19 +1,3 @@
-.app {
-  width: 100%;
-  min-height: 100vh;
-  padding: 20px;
-  box-sizing: border-box;
-}
-
-.loading {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  font-size: 1.5rem;
-  color: #646cff;
-}
-
 #root {
   max-width: 1280px;
   margin: 0 auto;
@@ -26,14 +10,12 @@
   padding: 1.5em;
   will-change: filter;
   transition: filter 300ms;
-  
-  &:hover {
-    filter: drop-shadow(0 0 2em #646cffaa);
-    
-    &.react {
-      filter: drop-shadow(0 0 2em #61dafbaa);
-    }
-  }
+}
+.logo:hover {
+  filter: drop-shadow(0 0 2em #646cffaa);
+}
+.logo.react:hover {
+  filter: drop-shadow(0 0 2em #61dafbaa);
 }
 
 @keyframes logo-spin {
