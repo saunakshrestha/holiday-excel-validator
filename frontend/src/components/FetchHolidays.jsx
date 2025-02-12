@@ -5,18 +5,17 @@ const FetchHolidays = () => {
 
   return (
     <div className='p-4 bg-white rounded-lg shadow'>
-      <h2 className='text-lg font-semibold mb-2'>Holidays</h2>
+      <h2 className='text-lg font-semibold mb-2'>तलका मितिहरू सार्बजनिक बिदाहरू हुन। </h2>
       {holidays.length === 0 ? (
         <p className='text-gray-500'>No holidays found</p>
       ) : (
-        <ul>
+        <div className='flex flex-wrap gap-1'>
           {holidays.map((holiday, index) => (
-            <li key={index} className='text-sm'>
-              {holiday?.name || 'Holiday'} -{' '}
-              {holiday?.date || 'No Date'}
-            </li>
+            <span key={index}>
+              {holiday}{index !== holidays.length - 1 ? ',' : ''}&nbsp;
+            </span>
           ))}
-        </ul>
+        </div>
       )}
     </div>
   )

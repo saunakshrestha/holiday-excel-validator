@@ -27,7 +27,9 @@ const CheckHolidays = () => {
 
   return (
     <div className='p-4 bg-white rounded-lg shadow'>
-      <h2 className='text-lg font-semibold mb-2'>Check Holidays from Excel</h2>
+      <h2 className='text-lg font-semibold mb-2'>
+        छुट्टिहरू जाँच गर्नुहोस् (Check Holidays from Excel)
+      </h2>
       <input
         type='file'
         onChange={(e) => setFile(e.target.files[0])}
@@ -40,9 +42,58 @@ const CheckHolidays = () => {
         Upload
       </button>
       {result && (
-        <pre className='mt-2 text-sm bg-gray-100 p-2'>
-          {JSON.stringify(result, null, 2)}
-        </pre>
+        <div className='mt-4'>
+          <div
+            className={`p-3 rounded mb-4 ${
+              result.success ? 'bg-green-100' : 'bg-red-100'
+            }`}
+          >
+            <p
+              className={`font-semibold ${
+                result.success ? 'text-green-700' : 'text-red-700'
+              }`}
+            >
+              {result.message}
+              {result.success
+                ? ' (Passed 🎉 ✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅)'
+                : ' (Failed)'}
+            </p>
+          </div>
+
+          {result.holiday_dates && result.holiday_dates.length > 0 && (
+            <div>
+              <h3 className='font-semibold text-gray-700 mb-2'>
+                तलका सार्वजनिक छुट्टी मिति गलत छन्::
+              </h3>
+              <div className='bg-gray-50 p-2 rounded'>
+                <div className='flex flex-wrap gap-1'>
+                  {result.holiday_dates.map((date, index) => (
+                    <span key={index} className='text-sm'>
+                      {date}
+                      {index !== result.holiday_dates.length - 1 ? ',' : ''}
+                      &nbsp;
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {result.invalid_dates && result.invalid_dates.length > 0 && (
+            <div className='mb-4'>
+              <h3 className='font-semibold text-red-600 mb-2'>
+                Invalid Entries:
+              </h3>
+              <div className='bg-gray-50 p-2 rounded'>
+                {result.invalid_dates.map((date, index) => (
+                  <div key={index} className='text-sm text-red-600'>
+                    {date}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
       )}
     </div>
   )

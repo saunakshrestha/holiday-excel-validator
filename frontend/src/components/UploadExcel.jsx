@@ -1,40 +1,62 @@
 import { useState } from 'react'
 import axios from 'axios'
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL; // Use env variable for base URL
+
 const UploadExcel = () => {
   const [file, setFile] = useState(null)
+  const [type, setType] = useState('Holiday')
 
   const handleUpload = async () => {
     if (!file) return alert('Please select a file')
+    if (!type) return alert('Please select a type (Holiday or Saturday)')
 
     const formData = new FormData()
     formData.append('file', file)
-    formData.append('type', 'holiday')
+    formData.append('type', type)
 
     try {
-      await axios.post(
-        'http://localhost:8000/api/upload/excel/holidays',
-        formData,
-        {
-          headers: { 'Content-Type': 'multipart/form-data' },
-        }
-      )
-      alert('File uploaded successfully')
+      await axios.post(`${API_BASE_URL}/upload/excel/holidays`, formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      })
+      alert('✅ File uploaded successfully')
+      setFile(null) // Reset file input after upload
+      setType('') // Reset type selection
     } catch (error) {
-      console.error('Error uploading file', error)
+      console.error('❌ Error uploading file', error)
+      alert('❌ Upload failed. Please try again.')
     }
   }
 
   return (
     <div className='p-4 bg-white rounded-lg shadow'>
       <h2 className='text-lg font-semibold mb-2'>
-        {' '}
-        🔴 ⚠️ Only New Holidays(xlsx){' '}
+        🔴 ⚠️ Only New Holidays (xlsx)
       </h2>
-      <input type='file' onChange={(e) => setFile(e.target.files[0])} />
+
+      {/* Type selection dropdown */}
+      <select
+        value={type}
+        onChange={(e) => setType(e.target.value)}
+        className='border p-2 rounded w-full mb-2'
+      >
+        <option value=''>-- Select Type --</option>
+        <option value='holiday'>Holiday</option>
+        <option value='saturday'>Saturday</option>
+      </select>
+
+      {/* File input */}
+      <input
+        type='file'
+        accept='.xlsx, .xls'
+        onChange={(e) => setFile(e.target.files[0])}
+        className='mb-2'
+      />
+
+      {/* Upload button */}
       <button
         onClick={handleUpload}
-        className='bg-green-500 text-white p-2 rounded mt-2'
+        className='bg-green-500 text-white p-2 rounded w-full mt-2 hover:bg-green-600'
       >
         Upload
       </button>
